@@ -32,12 +32,30 @@ void client::reg_accout(const QString& username, const QString& password) {
 	connect(&soc_, SIGNAL(readyRead()), this, SLOT(registerExec()));
 }
 
+void client::send(int recver_id, const QString& msg) {
+	message m;
+	m.add("type", 9);
+	m.add("recver_id", recver_id);
+	m.add("sender_id", user_id);
+	m.add("message", msg);
+	std::string d = m.getString();
+	soc_.write(m.getString().c_str());
+}
+
+client::~client() {
+	emit clientDestroyed();
+}
+
 void client::loginExec() {
 	QString msg = soc_.readAll();
 	message m(msg.toUtf8().constData());
 	if(m.getInt("type")==0) {
 		if(m.getInt("result")==1) {
-			emit loginSuccess(m.getInt("recver_id"));
+			user_id = m.getInt("recver_id");
+			//disconnect(this, SLOT(registerExec()));
+			disconnect(&soc_, SIGNAL(readyRead()), this, SLOT(loginExec()));
+			connect(&soc_, SIGNAL(readyRead()), this, SLOT(newMsgExec()));
+			emit loginSuccess(user_id);
 		}else {
 			emit loginFailure("unknown error!");
 			soc_.close();
@@ -65,3 +83,14 @@ void client::registerExec() {
 	}
 	soc_.close();
 }
+
+void client::newMsgExec() {
+	QString msg = soc_.readAll();
+
+	message m(msg.toUtf8().constData());
+	if (m.getInt("type") == 9)
+		emit newMsgArrived(m.getInt("sender_id"), m.getString("message"));
+	else
+		emit errorOccured(m.getString("content"));
+}
+
