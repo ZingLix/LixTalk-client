@@ -88,9 +88,50 @@ void client::newMsgExec() {
 	QString msg = soc_.readAll();
 
 	message m(msg.toUtf8().constData());
-	if (m.getInt("type") == 9)
+	switch (m.getInt("type")) {
+	case 9:
 		emit newMsgArrived(m.getInt("sender_id"), m.getString("message"));
-	else
+		break;
+	case 3:
+		friend_exec(m);
+		break;
+	default:
 		emit errorOccured(m.getString("content"));
+	}
 }
 
+
+void client::friend_request_feedback(int sender_id, bool accept) {
+	message m;
+	m.add("type", 3);
+	m.add("code", accept ? 2 : 3);
+	m.add("sender_id", sender_id);
+	m.add("recver_id", user_id);
+	soc_.write(m.getString().c_str());
+}
+
+void client::addFriend(const QString& recver_id,const QString& content) {
+	message m;
+	m.add("type", 3);
+	m.add("code", 1);
+	m.add("sender_id", user_id);
+	m.add("recver_id", recver_id.toInt());
+	m.add("content", content);
+	soc_.write(m.getString().c_str());
+}
+
+void client::friend_exec(message& m) {
+	switch (m.getInt("code")) {
+	case 1:
+		emit newFriendRequest(m.getInt("sender_id"));
+		break;
+	case 2:
+		emit FriendRequestAccepted(m.getInt("recver_id"));
+		break;
+	case 3:
+		emit FriendRequestRefused(m.getInt("recver_id"));
+		break;
+	default:
+		emit errorOccured("??");
+	}
+}

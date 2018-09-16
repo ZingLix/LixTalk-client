@@ -160,7 +160,7 @@ p, li { white-space: pre-wrap; }
      </rect>
     </property>
     <property name="text">
-     <string> </string>
+     <string/>
     </property>
    </widget>
    <widget class="QPushButton" name="pushButton_2">
@@ -189,10 +189,10 @@ p, li { white-space: pre-wrap; }
    <widget class="QTextEdit" name="textEdit_6">
     <property name="geometry">
      <rect>
-      <x>40</x>
+      <x>50</x>
       <y>160</y>
       <width>251</width>
-      <height>131</height>
+      <height>101</height>
      </rect>
     </property>
    </widget>
@@ -215,8 +215,31 @@ p, li { white-space: pre-wrap; }
       <x>360</x>
       <y>120</y>
       <width>256</width>
-      <height>192</height>
+      <height>141</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QTextEdit" name="textEdit_7">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>300</y>
+      <width>111</width>
+      <height>31</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pushButton_4">
+    <property name="geometry">
+     <rect>
+      <x>180</x>
+      <y>300</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Add Friend</string>
     </property>
    </widget>
   </widget>

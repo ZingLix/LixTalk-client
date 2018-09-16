@@ -3,6 +3,8 @@
 
 #include <QtNetwork/QTcpSocket>
 
+class message;
+
 class client:public QObject
 {
 	Q_OBJECT
@@ -13,7 +15,11 @@ public:
 	void login(const QString& username, const QString& password);
 	void reg_accout(const QString& username, const QString& password);
 	void send(int recver_id, const QString& msg);
+	void friend_request_feedback(int sender_id, bool accept);
+	void addFriend(const QString& recver_id, const QString& content);
+	void friend_exec(message& m);
 	~client();
+
 public slots:
 	void loginExec();
 	void registerExec();
@@ -27,6 +33,9 @@ signals:
 	void newMsgArrived(int sender_id, std::string msg);
 	void errorOccured(std::string msg);
 	void clientDestroyed();
+	void newFriendRequest(int sender_id);
+	void FriendRequestAccepted(int recver_id);
+	void FriendRequestRefused(int recver_id);
 
 private:
 	QTcpSocket soc_;
