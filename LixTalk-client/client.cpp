@@ -108,6 +108,7 @@ void client::friend_request_feedback(int sender_id, bool accept) {
 	m.add("sender_id", sender_id);
 	m.add("recver_id", user_id);
 	soc_.write(m.getString().c_str());
+	if (accept) emit FriendRequestAccepted(sender_id);
 }
 
 void client::addFriend(const QString& recver_id,const QString& content) {
@@ -131,7 +132,28 @@ void client::friend_exec(message& m) {
 	case 3:
 		emit FriendRequestRefused(m.getInt("recver_id"));
 		break;
+	case 4:
+		friendListUpdate(m);
+		break;
 	default:
 		emit errorOccured("??");
 	}
+}
+
+void client::friendListUpdate(message& m) {
+	std::vector<std::pair<int, int>> friendList;
+	const rapidjson::Value& id = m.getArray("friendID");
+	const rapidjson::Value& groupID = m.getArray("friendGroup");
+	for(rapidjson::SizeType i=0;i<id.Size();++i) {
+		friendList.emplace_back(id[i].GetInt(), groupID[i].GetInt());
+	}
+	emit FriendListUpdate(friendList);
+}
+
+void client::askForFriendList() {
+	message m;
+	m.add("type", 3);
+	m.add("code", 4);
+	m.add("sender_id", user_id);
+	soc_.write(m.getString().c_str());
 }

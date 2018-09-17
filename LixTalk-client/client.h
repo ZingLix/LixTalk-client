@@ -18,6 +18,8 @@ public:
 	void friend_request_feedback(int sender_id, bool accept);
 	void addFriend(const QString& recver_id, const QString& content);
 	void friend_exec(message& m);
+	void friendListUpdate(message& m);
+	void askForFriendList();
 	~client();
 
 public slots:
@@ -36,6 +38,7 @@ signals:
 	void newFriendRequest(int sender_id);
 	void FriendRequestAccepted(int recver_id);
 	void FriendRequestRefused(int recver_id);
+	void FriendListUpdate(const std::vector<std::pair<int, int>>& list);
 
 private:
 	QTcpSocket soc_;

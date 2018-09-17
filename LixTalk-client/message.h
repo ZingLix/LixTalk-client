@@ -55,6 +55,10 @@ public:
 		return doc_[key].GetInt();
 	}
 
+	const rapidjson::Value& getArray(std::string key) {
+		return doc_[key];
+	}
+
 private:
 	rapidjson::Document doc_;
 	rapidjson::MemoryPoolAllocator<>& allocator;

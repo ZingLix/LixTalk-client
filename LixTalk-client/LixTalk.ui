@@ -180,7 +180,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>120</y>
+      <y>110</y>
       <width>131</width>
       <height>31</height>
      </rect>
@@ -190,7 +190,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>50</x>
-      <y>160</y>
+      <y>150</y>
       <width>251</width>
       <height>101</height>
      </rect>
@@ -200,7 +200,7 @@ p, li { white-space: pre-wrap; }
     <property name="geometry">
      <rect>
       <x>200</x>
-      <y>120</y>
+      <y>110</y>
       <width>75</width>
       <height>23</height>
      </rect>
@@ -240,6 +240,16 @@ p, li { white-space: pre-wrap; }
     </property>
     <property name="text">
      <string>Add Friend</string>
+    </property>
+   </widget>
+   <widget class="QTreeWidget" name="treeWidget">
+    <property name="geometry">
+     <rect>
+      <x>340</x>
+      <y>300</y>
+      <width>256</width>
+      <height>192</height>
+     </rect>
     </property>
    </widget>
   </widget>

@@ -17,6 +17,8 @@ public:
 	void register_account();
 	void send();
 	void addFriend();
+	~LixTalk();
+
 public slots:
 	void loginSuccess(int id) {
 		ui.label_5->setText(QString::number(id));
@@ -25,7 +27,10 @@ public slots:
 		connect(&*client_, SIGNAL(newFriendRequest(int)), this, SLOT(newFriendRequest(int)));
 		connect(&*client_, SIGNAL(FriendRequestAccepted(int)), this, SLOT(FriendRequestAccepted(int)));
 		connect(&*client_, SIGNAL(FriendRequestRefused(int)), this, SLOT(FriendRequestRefused(int)));
-
+		connect(&*client_, SIGNAL(clientDestroyed()), this, SLOT(restart()));
+		connect(&*client_, SIGNAL(FriendListUpdate(const std::vector<std::pair<int, int>>&)),
+			this, SLOT(FriendListInit(const std::vector<std::pair<int, int>>&)));
+		client_->askForFriendList();
 	}
 	void loginFailure(std::string msg) {
 		ui.label_5->setText(QString::fromStdString(msg));
@@ -49,7 +54,14 @@ public slots:
 	void newFriendRequest(int sender_id);
 	void FriendRequestAccepted(int recver_id);
 	void FriendRequestRefused(int recver_id);
+	void FriendListInit(const std::vector<std::pair<int, int>>& list);
+	void restart();
+	void FriendListAdd(int id, int groupID);
+
 private:
 	Ui::LixTalkClass ui;
 	std::shared_ptr<client> client_;
+	std::map<int,  QTreeWidgetItem *> groupMap_;
+	std::map<int, std::pair<int, QTreeWidgetItem *>> userMap_;
+	
 };
