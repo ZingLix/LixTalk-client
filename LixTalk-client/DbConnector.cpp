@@ -1,5 +1,6 @@
 #include "DbConnector.h"
 #include <QSqlQuery>
+#include <QVariant>
 #include <vector>
 
 void DbConnector::connect(int id) {
@@ -19,16 +20,25 @@ void DbConnector::init() {
 	}
 }
 
-void DbConnector::addChatHistory(int id, std::string content) {
-	QString sql = QString("insert into chatHistory (sender_id,content) values (") + QString::number(id) + ",\"" + QString::fromStdString(content) + "\")";
+void DbConnector::addChatHistory(int id, std::string content,bool recv) {
+//	QString sql = QString("insert into chatHistory (sender_id,recver_id,content)\
+//		 values (") + QString::number(sender_id) + ",\"" + QString::fromStdString(content) + "\")";
+	
 	QSqlQuery query;
-	query.exec(sql);
+	query.prepare("insert into chatHistory (sender_id,recv,content) values (?,?,?)");
+	query.addBindValue(id);
+	query.addBindValue(recv);
+	query.addBindValue(QString::fromStdString(content));
+
+	query.exec();
+
+
 }
 
 bool DbConnector::checkTableExist(QString tableName) {
 	QString sql = QString("select count(*) from sqlite_master where type = 'table' name='%1'").arg(tableName);
 	QSqlQuery query;
-	return query.exec(sql);
+	return query.exec(sql);   
 }
 
 void DbConnector::createTable(QString tableName) {
@@ -37,6 +47,7 @@ void DbConnector::createTable(QString tableName) {
 		str = "create table chatHistory( \
 			id int auto_increment,\
 			sender_id int not null, \
+			recv bool not null, \
 			content varchar not null\
 			)";
 	}else if(tableName=="friendList") {
@@ -50,3 +61,14 @@ void DbConnector::createTable(QString tableName) {
 	query.exec(str);
 }
 
+std::shared_ptr<std::vector<std::pair<std::string, bool>>> DbConnector::getChatHistory(int id) {
+	std::shared_ptr<std::vector<std::pair<std::string, bool>>> ptr(new std::vector<std::pair<std::string, bool>>());
+	QSqlQuery query;
+	query.prepare("select content,recv from chatHistory where sender_id = ?");
+	query.addBindValue(id);
+	query.exec();
+	while (query.next()) {
+		ptr->push_back(std::make_pair(query.value(0).toString().toUtf8().constData(), query.value(1).toBool()));
+	}
+	return ptr;
+}

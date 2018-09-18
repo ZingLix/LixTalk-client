@@ -1,6 +1,8 @@
 #ifndef LIXTALK_DBCONNECTOR
 #define LIXTALK_DBCONNECTOR
 #include <QSqlDatabase>
+#include <vector>
+#include <memory>
 
 class DbConnector
 {
@@ -11,7 +13,9 @@ public:
 
 	void connect(int id);
 	void init();
-	void addChatHistory(int id, std::string content);
+	void addChatHistory(int id, std::string content, bool recv);
+	std::shared_ptr<std::vector<std::pair<std::string, bool>>> getChatHistory(int id);
+
 private:
 	bool checkTableExist(QString tableName);
 	void createTable(QString tableName);

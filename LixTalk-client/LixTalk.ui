@@ -199,16 +199,6 @@ p, li { white-space: pre-wrap; }
      <string>send</string>
     </property>
    </widget>
-   <widget class="QListWidget" name="listWidget">
-    <property name="geometry">
-     <rect>
-      <x>260</x>
-      <y>110</y>
-      <width>301</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
    <widget class="QTextEdit" name="textEdit_7">
     <property name="geometry">
      <rect>
@@ -246,6 +236,22 @@ p, li { white-space: pre-wrap; }
       <string notr="true">1</string>
      </property>
     </column>
+   </widget>
+   <widget class="QTabWidget" name="tabWidget">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>110</y>
+      <width>301</width>
+      <height>221</height>
+     </rect>
+    </property>
+    <property name="currentIndex">
+     <number>-1</number>
+    </property>
+    <property name="tabsClosable">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">

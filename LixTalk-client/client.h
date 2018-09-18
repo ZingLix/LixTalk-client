@@ -22,6 +22,7 @@ public:
 	void friendListUpdate(message& m);
 	void askForFriendList();
 	void msg_exec(int id,std::string content);
+	std::shared_ptr<std::vector<std::pair<std::string, bool>>> getChatHistory(int id);
 	~client();
 
 public slots:

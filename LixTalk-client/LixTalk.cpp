@@ -31,6 +31,10 @@ void LixTalk::register_account() {
 
 void LixTalk::send() {
 	client_->send(curSelectUserID, ui.textEdit_6->toPlainText());
+	if (list_map_.find(curSelectUserID) == list_map_.end()) return;
+	auto it = ui.tabWidget->widget(list_map_[curSelectUserID])->layout()->itemAt(0);
+	QString str = "-> " + ui.textEdit_6->toPlainText();
+	qobject_cast<QListWidget *>(it->widget())->addItem(str);
 
 }
 
@@ -54,12 +58,18 @@ void LixTalk::addFriend() {
 }
 
 void LixTalk::FriendRequestAccepted(int recver_id) {
-	ui.listWidget->addItem(new QListWidgetItem(QString(QString::number( recver_id )+ " accept the friend request.")));
+	if (list_map_.find(recver_id) == list_map_.end()) return;
+	auto it = ui.tabWidget->widget(list_map_[recver_id])->layout()->itemAt(0);
+	qobject_cast<QListWidget *>(it->widget())->addItem(new QListWidgetItem(QString(QString::number( recver_id )+ " accept the friend request.")));
 	FriendListAdd(recver_id, 0);
 }
 
 void LixTalk::FriendRequestRefused(int recver_id) {
-	ui.listWidget->addItem(new QListWidgetItem(QString(QString::number(recver_id) + " refuse the friend request.")));
+	if (list_map_.find(recver_id) == list_map_.end()) return;
+
+	auto it = ui.tabWidget->widget(list_map_[recver_id])->layout()->itemAt(0);
+
+	qobject_cast<QListWidget *>(it->widget())->addItem(new QListWidgetItem(QString(QString::number(recver_id) + " refuse the friend request.")));
 }
 
 void LixTalk::FriendListInit(const std::vector<std::pair<int, int>>& list) {
@@ -98,4 +108,28 @@ void LixTalk::friendSelectChanged(QTreeWidgetItem* item, int count) {
 
 	ui.label_5->setText(QString::number(userMap_[i][j]));
 	curSelectUserID = userMap_[i][j];
+
+	if(list_map_.find(curSelectUserID)==list_map_.end()) {
+		QWidget *widget = new QWidget();
+		QListWidget *listview = new QListWidget();
+		QVBoxLayout *vLayout = new QVBoxLayout();
+		vLayout->addWidget(listview);
+		widget->setLayout(vLayout);
+		ui.tabWidget->addTab(widget, QString::number(curSelectUserID));
+		list_map_[curSelectUserID] = ui.tabWidget->indexOf(widget);
+		auto ptr = client_->getChatHistory(curSelectUserID);
+		for(auto it=ptr->begin();it!=ptr->end();++it) {
+			QString str;
+			if(it->second==true) {
+				str += "<- ";
+			}else {
+				str += "-> ";
+			}
+			str += QString::fromStdString(it->first);
+			listview->addItem(new QListWidgetItem(str));
+		}
+	}
+
+	ui.tabWidget->setCurrentIndex(list_map_[curSelectUserID]);
+
 }

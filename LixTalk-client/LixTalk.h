@@ -1,9 +1,12 @@
 #pragma once
-
-#include <QtWidgets/QMainWindow>
 #include <memory>
+#include <map>
+#include <QtWidgets/QMainWindow>
+#include <QListWidget>
+#include <QVBoxLayout>
 #include "ui_LixTalk.h"
 #include "client.h"
+
 
 class LixTalk : public QMainWindow
 {
@@ -42,8 +45,10 @@ public slots:
 		ui.label_5->setText(QString::fromStdString(msg));
 	}
 	void newMsgExec(int sender_id,std::string msg) {
-		std::string newMsg = std::to_string(sender_id)+ ":" + msg;
-		ui.listWidget->addItem(new QListWidgetItem(QString::fromStdString(newMsg)));
+		std::string newMsg = "<- " + msg;
+		if (list_map_.find(sender_id) == list_map_.end()) return;
+		auto it = ui.tabWidget->widget(list_map_[sender_id])->layout()->itemAt(0);
+		qobject_cast<QListWidget *>(it->widget())->addItem(new QListWidgetItem(QString::fromStdString(newMsg)));
 	}
 	void errExec(std::string msg) {
 		ui.label_5->setText(QString::fromStdString(msg));
@@ -65,4 +70,5 @@ private:
 	std::map<int, int> groupMap_;
 	std::vector<std::vector<int>> userMap_;
 	int curSelectUserID;
+	std::map<int, int> list_map_;
 };

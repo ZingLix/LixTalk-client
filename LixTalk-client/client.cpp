@@ -39,6 +39,7 @@ void client::send(int recver_id, const QString& msg) {
 	m.add("sender_id", user_id);
 	m.add("message", msg);
 	std::string d = m.getString();
+	db_.addChatHistory(recver_id, msg.toUtf8().constData(), false);
 	soc_.write(m.getString().c_str());
 }
 
@@ -161,5 +162,9 @@ void client::askForFriendList() {
 
 void client::msg_exec(int id, std::string content) {
 	emit newMsgArrived(id, content);
-	db_.addChatHistory(id, content);
+	db_.addChatHistory(id, content,true);
+}
+
+std::shared_ptr<std::vector<std::pair<std::string, bool>>> client::getChatHistory(int id) {
+	return db_.getChatHistory(id);
 }
