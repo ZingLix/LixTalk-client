@@ -10,6 +10,7 @@ LixTalk::LixTalk(QWidget *parent)
 	QObject::connect(ui.pushButton_2, &QPushButton::clicked, this, &LixTalk::register_account);
 	connect(ui.pushButton_3, &QPushButton::clicked, this, &LixTalk::send);
 	connect(ui.pushButton_4, &QPushButton::clicked, this, &LixTalk::addFriend);
+	connect(ui.treeWidget, SIGNAL(itemClicked(QTreeWidgetItem*, int)), this, SLOT(friendSelectChanged(QTreeWidgetItem*, int)));
 	ui.treeWidget->setHeaderLabel("Friend");
 }
 
@@ -29,7 +30,7 @@ void LixTalk::register_account() {
 }
 
 void LixTalk::send() {
-	client_->send(ui.textEdit_5->toPlainText().toInt(), ui.textEdit_6->toPlainText());
+	client_->send(curSelectUserID, ui.textEdit_6->toPlainText());
 
 }
 
@@ -77,13 +78,24 @@ void LixTalk::restart() {
 
 void LixTalk::FriendListAdd(int id, int groupID) {
 	if (groupMap_.find(groupID) == groupMap_.end()) {
-		groupMap_[groupID] = new QTreeWidgetItem(QStringList(QString::number(groupID)));
-		ui.treeWidget->addTopLevelItem(groupMap_[groupID]);
+		groupMap_[groupID] = groupMap_.size();
+		ui.treeWidget->addTopLevelItem(new QTreeWidgetItem(QStringList(QString::number(groupID))));
+		userMap_.emplace_back();
 	}
-	userMap_.insert(std::make_pair(id, std::make_pair(groupID, new QTreeWidgetItem(QStringList(QString::number(id))))));
-	groupMap_[groupID]->addChild(userMap_[id].second);
+	userMap_[groupMap_[groupID]].push_back(id);
+	ui.treeWidget->topLevelItem(groupMap_[groupID])->addChild(new QTreeWidgetItem(QStringList(QString::number(id))));
 }
 
 LixTalk::~LixTalk() {
 	disconnect(&*client_, SIGNAL(clientDestroyed()), this, SLOT(restart()));
+}
+
+void LixTalk::friendSelectChanged(QTreeWidgetItem* item, int count) {
+	auto parent = item->parent();
+	if (parent == nullptr) return;
+	int i = ui.treeWidget->indexOfTopLevelItem(parent);
+	int j = parent->indexOfChild(item);
+
+	ui.label_5->setText(QString::number(userMap_[i][j]));
+	curSelectUserID = userMap_[i][j];
 }

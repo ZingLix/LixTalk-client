@@ -57,11 +57,12 @@ public slots:
 	void FriendListInit(const std::vector<std::pair<int, int>>& list);
 	void restart();
 	void FriendListAdd(int id, int groupID);
+	void friendSelectChanged(QTreeWidgetItem*, int);
 
 private:
 	Ui::LixTalkClass ui;
 	std::shared_ptr<client> client_;
-	std::map<int,  QTreeWidgetItem *> groupMap_;
-	std::map<int, std::pair<int, QTreeWidgetItem *>> userMap_;
-	
+	std::map<int, int> groupMap_;
+	std::vector<std::vector<int>> userMap_;
+	int curSelectUserID;
 };
