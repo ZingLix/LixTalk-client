@@ -55,6 +55,7 @@ void client::loginExec() {
 			//disconnect(this, SLOT(registerExec()));
 			disconnect(&soc_, SIGNAL(readyRead()), this, SLOT(loginExec()));
 			connect(&soc_, SIGNAL(readyRead()), this, SLOT(newMsgExec()));
+			db_.connect(user_id);
 			emit loginSuccess(user_id);
 		}else {
 			emit loginFailure("unknown error!");
@@ -90,7 +91,7 @@ void client::newMsgExec() {
 	message m(msg.toUtf8().constData());
 	switch (m.getInt("type")) {
 	case 9:
-		emit newMsgArrived(m.getInt("sender_id"), m.getString("message"));
+		msg_exec(m.getInt("sender_id"), m.getString("message"));
 		break;
 	case 3:
 		friend_exec(m);
@@ -156,4 +157,9 @@ void client::askForFriendList() {
 	m.add("code", 4);
 	m.add("sender_id", user_id);
 	soc_.write(m.getString().c_str());
+}
+
+void client::msg_exec(int id, std::string content) {
+	emit newMsgArrived(id, content);
+	db_.addChatHistory(id, content);
 }

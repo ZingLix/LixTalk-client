@@ -2,6 +2,7 @@
 #define LIXTALK_CLIENT
 
 #include <QtNetwork/QTcpSocket>
+#include "DbConnector.h"
 
 class message;
 
@@ -20,6 +21,7 @@ public:
 	void friend_exec(message& m);
 	void friendListUpdate(message& m);
 	void askForFriendList();
+	void msg_exec(int id,std::string content);
 	~client();
 
 public slots:
@@ -43,6 +45,7 @@ signals:
 private:
 	QTcpSocket soc_;
 	int user_id;
+	DbConnector db_;
 };
 
 #endif

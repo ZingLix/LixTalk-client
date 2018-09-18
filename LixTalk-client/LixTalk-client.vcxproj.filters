@@ -8,6 +8,9 @@
     <ClCompile Include="client.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DbConnector.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -51,6 +54,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="message.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DbConnector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
