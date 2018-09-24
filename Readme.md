@@ -1,4 +1,4 @@
-# LixTalk
+# LixTalk-client
 
 LixTalk is a high-performance secure IM system.
 
