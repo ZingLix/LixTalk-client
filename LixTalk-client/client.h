@@ -21,6 +21,7 @@ public:
 	void friend_exec(message& m);
 	void friendListUpdate(message& m);
 	void askForFriendList();
+	void askForOfflineMsg();
 	void msg_exec(int id,std::string content);
 	std::shared_ptr<std::vector<std::pair<std::string, bool>>> getChatHistory(int id);
 	~client();
@@ -44,6 +45,10 @@ signals:
 	void FriendListUpdate(const std::vector<std::pair<int, int>>& list);
 
 private:
+	std::shared_ptr<std::vector<std::string>> split(const QString& str);
+	void soc_write(const std::string & str) {
+		soc_.write((str + "\r\n\r\n").c_str());
+	}
 	QTcpSocket soc_;
 	int user_id;
 	DbConnector db_;

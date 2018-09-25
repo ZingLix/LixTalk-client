@@ -34,6 +34,7 @@ public slots:
 		connect(&*client_, SIGNAL(FriendListUpdate(const std::vector<std::pair<int, int>>&)),
 			this, SLOT(FriendListInit(const std::vector<std::pair<int, int>>&)));
 		client_->askForFriendList();
+		client_->askForOfflineMsg();
 	}
 	void loginFailure(std::string msg) {
 		ui.label_5->setText(QString::fromStdString(msg));
@@ -65,6 +66,8 @@ public slots:
 	void friendSelectChanged(QTreeWidgetItem*, int);
 
 private:
+
+
 	Ui::LixTalkClass ui;
 	std::shared_ptr<client> client_;
 	std::map<int, int> groupMap_;

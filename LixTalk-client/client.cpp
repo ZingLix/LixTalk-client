@@ -18,7 +18,7 @@ void client::login(const QString& username, const QString& password) {
 	std::string mmm = m.getString();
 
 	connect(&soc_, SIGNAL(readyRead()), this, SLOT(loginExec()));
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
 
 }
 
@@ -28,7 +28,7 @@ void client::reg_accout(const QString& username, const QString& password) {
 	m.add("type", 1);
 	m.add("username", username);
 	m.add("password", password);
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
 	connect(&soc_, SIGNAL(readyRead()), this, SLOT(registerExec()));
 }
 
@@ -40,7 +40,7 @@ void client::send(int recver_id, const QString& msg) {
 	m.add("message", msg);
 	std::string d = m.getString();
 	db_.addChatHistory(recver_id, msg.toUtf8().constData(), false);
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
 }
 
 client::~client() {
@@ -89,17 +89,33 @@ void client::registerExec() {
 void client::newMsgExec() {
 	QString msg = soc_.readAll();
 
-	message m(msg.toUtf8().constData());
-	switch (m.getInt("type")) {
-	case 9:
-		msg_exec(m.getInt("sender_id"), m.getString("message"));
-		break;
-	case 3:
-		friend_exec(m);
-		break;
-	default:
-		emit errorOccured(m.getString("content"));
+	auto ptr= split(msg);
+	for(auto it=ptr->begin();it!=ptr->end();++it) {
+		message m(*it);
+		switch (m.getInt("type")) {
+		case 9:
+			msg_exec(m.getInt("sender_id"), m.getString("message"));
+			break;
+		case 3:
+			friend_exec(m);
+			break;
+		default:
+			emit errorOccured(m.getString("content"));
+		}
 	}
+
+}
+
+std::shared_ptr<std::vector<std::string>> client::split(const QString& str) {
+	std::shared_ptr<std::vector<std::string>> ptr(new std::vector<std::string>());
+	std::string msg = str.toUtf8().toStdString();
+	int pos = 0;
+	size_t p;
+	while ((p = msg.find("\r\n\r\n",pos))!=std::string::npos) {
+		ptr->push_back(msg.substr(pos, p-pos));
+		pos = p + 4;
+	}
+	return ptr;
 }
 
 
@@ -109,7 +125,7 @@ void client::friend_request_feedback(int sender_id, bool accept) {
 	m.add("code", accept ? 2 : 3);
 	m.add("sender_id", sender_id);
 	m.add("recver_id", user_id);
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
 	if (accept) emit FriendRequestAccepted(sender_id);
 }
 
@@ -120,7 +136,7 @@ void client::addFriend(const QString& recver_id,const QString& content) {
 	m.add("sender_id", user_id);
 	m.add("recver_id", recver_id.toInt());
 	m.add("content", content);
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
 }
 
 void client::friend_exec(message& m) {
@@ -157,7 +173,14 @@ void client::askForFriendList() {
 	m.add("type", 3);
 	m.add("code", 4);
 	m.add("sender_id", user_id);
-	soc_.write(m.getString().c_str());
+	soc_write(m.getString());
+}
+
+void client::askForOfflineMsg() {
+	message m;
+	m.add("type", 8);
+	m.add("sender_id", user_id);
+	soc_write(m.getString());
 }
 
 void client::msg_exec(int id, std::string content) {
