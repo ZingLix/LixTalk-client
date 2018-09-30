@@ -11,6 +11,9 @@
     <ClCompile Include="DbConnector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MainWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resource Files">
@@ -41,9 +44,15 @@
     <QtMoc Include="client.h">
       <Filter>Header Files</Filter>
     </QtMoc>
+    <QtMoc Include="MainWindow.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="LixTalk.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
+    <QtUic Include="MainWindow.ui">
       <Filter>Form Files</Filter>
     </QtUic>
   </ItemGroup>

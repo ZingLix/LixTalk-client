@@ -123,6 +123,7 @@
     <ClCompile Include="DbConnector.cpp" />
     <ClCompile Include="LixTalk.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainWindow.cpp" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="LixTalk.h">
@@ -132,6 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <QtUic Include="LixTalk.ui" />
+    <QtUic Include="MainWindow.ui" />
   </ItemGroup>
   <ItemGroup>
     <QtRcc Include="LixTalk.qrc" />
@@ -144,6 +146,12 @@
       <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WIDGETS_LIB</Define>
     </QtMoc>
     <ClInclude Include="DbConnector.h" />
+    <QtMoc Include="MainWindow.h">
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtSql</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WIDGETS_LIB;QT_SQL_LIB</Define>
+      <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.\GeneratedFiles;.;$(QTDIR)\include;.\GeneratedFiles\$(ConfigurationName)\.;$(QTDIR)\include\QtCore;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtWidgets;$(QTDIR)\include\QtSql</IncludePath>
+      <Define Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UNICODE;_UNICODE;WIN32;WIN64;QT_DLL;QT_NO_DEBUG;NDEBUG;QT_CORE_LIB;QT_GUI_LIB;QT_NETWORK_LIB;QT_WIDGETS_LIB;QT_SQL_LIB</Define>
+    </QtMoc>
     <ClInclude Include="message.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
