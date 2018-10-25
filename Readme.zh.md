@@ -2,7 +2,7 @@
 
 # LixTalk-client
 
-![](https://travis-ci.com/ZingLix/LixTalk-client.svg?branch=master)
+[![Build Status](https://travis-ci.com/ZingLix/LixTalk-client.svg?branch=master)](https://travis-ci.com/ZingLix/LixTalk-client)
 
 LixTalk 是一个高效、安全的即时通讯系统。
 

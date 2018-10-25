@@ -2,7 +2,7 @@ English | [简体中文](https://github.com/ZingLix/LixTalk-client/blob/master/R
 
 # LixTalk-client
 
-![](https://travis-ci.com/ZingLix/LixTalk-client.svg?branch=master)
+[![Build Status](https://travis-ci.com/ZingLix/LixTalk-client.svg?branch=master)](https://travis-ci.com/ZingLix/LixTalk-client)
 
 LixTalk is a high-performance secure IM system.
 
