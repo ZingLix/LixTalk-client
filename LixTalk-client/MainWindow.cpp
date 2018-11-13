@@ -26,7 +26,6 @@ void MainWindow::send() {
 	auto it = ui.tabWidget->widget(list_map_[curSelectUserID])->layout()->itemAt(0);
 	QString str = "-> " + ui.textEdit_6->toPlainText();
 	qobject_cast<QListWidget *>(it->widget())->addItem(str);
-
 }
 
 void MainWindow::newFriendRequest(int sender_id) {

@@ -1,5 +1,7 @@
 #include "LixTalk.h"
 #include <QMessageBox>
+#include <iostream>
+#include <chrono>
 
 LixTalk::LixTalk(QWidget *parent)
 	: QMainWindow(parent)

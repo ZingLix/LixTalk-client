@@ -37,7 +37,7 @@ void client::send(int recver_id, const QString& msg) {
 	m.add("type", 9);
 	m.add("recver_id", recver_id);
 	m.add("sender_id", user_id);
-	m.add("message", msg);
+	m.add("content", msg);
 	std::string d = m.getString();
 	db_.addChatHistory(recver_id, msg.toUtf8().constData(), false);
 	soc_write(m.getString());
@@ -57,6 +57,7 @@ void client::loginExec() {
 			disconnect(&soc_, SIGNAL(readyRead()), this, SLOT(loginExec()));
 			connect(&soc_, SIGNAL(readyRead()), this, SLOT(newMsgExec()));
 			db_.connect(user_id);
+			if (db_.checkNew()) pullMsg();
 			emit loginSuccess(user_id);
 		}else {
 			emit loginFailure("unknown error!");
@@ -94,7 +95,10 @@ void client::newMsgExec() {
 		message m(*it);
 		switch (m.getInt("type")) {
 		case 9:
-			msg_exec(m.getInt("sender_id"), m.getString("message"));
+			msg_exec(m.getInt("sender_id"), m.getString("content"));
+			break;
+		case 7:
+			msg_exec(m);
 			break;
 		case 3:
 			friend_exec(m);
@@ -117,7 +121,6 @@ std::shared_ptr<std::vector<std::string>> client::split(const QString& str) {
 	}
 	return ptr;
 }
-
 
 void client::friend_request_feedback(int sender_id, bool accept) {
 	message m;
@@ -182,6 +185,20 @@ void client::askForOfflineMsg() {
 	m.add("sender_id", user_id);
 	soc_write(m.getString());
 }
+
+void client::pullMsg() {
+	message m;
+	m.add("type", 7);
+	m.add("sender_id", user_id);
+	soc_write(m.getString());
+}
+
+void client::msg_exec(message& m) {
+	bool recv = m.getInt("recver_id") == user_id;
+	int id = recv ? m.getInt("sender_id") : m.getInt("recver_id");
+	db_.addChatHistory(id, m.getString("content"), recv);
+}
+
 
 void client::msg_exec(int id, std::string content) {
 	emit newMsgArrived(id, content);

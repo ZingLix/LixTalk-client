@@ -22,6 +22,8 @@ public:
 	void friendListUpdate(message& m);
 	void askForFriendList();
 	void askForOfflineMsg();
+	void pullMsg();
+	void msg_exec(message& m);
 	void msg_exec(int id,std::string content);
 	std::shared_ptr<std::vector<std::pair<std::string, bool>>> getChatHistory(int id);
 	~client();

@@ -31,8 +31,6 @@ void DbConnector::addChatHistory(int id, std::string content,bool recv) {
 	query.addBindValue(QString::fromStdString(content));
 
 	query.exec();
-
-
 }
 
 bool DbConnector::checkTableExist(QString tableName) {
@@ -71,4 +69,11 @@ std::shared_ptr<std::vector<std::pair<std::string, bool>>> DbConnector::getChatH
 		ptr->push_back(std::make_pair(query.value(0).toString().toUtf8().constData(), query.value(1).toBool()));
 	}
 	return ptr;
+}
+
+bool DbConnector::checkNew() {
+	QSqlQuery query("select count(*) from chatHistory");
+	while (query.next())
+		return query.value(0) == 0;
+	return true;
 }
